@@ -7,12 +7,32 @@ class Student:
         self.courses_in_progress = []
         self.grades = {}
 
+    def grade_lecturer(self, mentor, course, grade):
+        if isinstance(mentor, Lecturer) and course in self.courses_in_progress:
+            if course in mentor.grades:
+                mentor.grades[course] += [grade]
+            else:
+                mentor.grades[course] = [grade]
+        else:
+            return 'Ошибка'
+
 
 class Mentor:
     def __init__(self, name, surname):
         self.name = name
         self.surname = surname
         self.courses_attached = []
+
+
+class Lecturer(Mentor):
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
+        self.grades = {}
+
+
+class Reviewer(Mentor):
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
 
     def rate_hw(self, student, course, grade):
         if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
@@ -24,30 +44,25 @@ class Mentor:
             return 'Ошибка'
 
 
-class Lecturer(Mentor):
-    def __init__(self, name, surname):
-        super().__init__(name, surname)
-
-
-class Reviewer(Mentor):
-    def __init__(self, name, surname):
-        super().__init__(name, surname)
-
-
 best_student = Student('Ruoy', 'Eman', 'your_gender')
 best_student.courses_in_progress += ['Python']
 
-cool_mentor = Mentor('Some', 'Buddy')
-cool_mentor.courses_attached += ['Python']
+mentor1 = Lecturer('Питер', 'Паркер')
+mentor2 = Reviewer('Мери', 'Отсон')
+mentor1.courses_attached += ['Python']
+mentor2.courses_attached += ['Python']
 
-cool_mentor.rate_hw(best_student, 'Python', 10)
-cool_mentor.rate_hw(best_student, 'Python', 10)
-cool_mentor.rate_hw(best_student, 'Python', 10)
+mentor2.rate_hw(best_student, 'Python', 10)
+mentor2.rate_hw(best_student, 'Python', 10)
+mentor2.rate_hw(best_student, 'Python', 10)
+
+best_student.grade_lecturer(mentor1, 'Python', 7)
+best_student.grade_lecturer(mentor1, 'Python', 9)
+best_student.grade_lecturer(mentor1, 'Python', 8)
+
+print(mentor1.name, mentor1.surname)
+print(mentor2.name, mentor2.surname)
 
 print(best_student.grades)
 
-leser1 = Lecturer('Питер', 'Паркер')
-leser2 = Lecturer('Мери', 'Отсон')
-
-print(leser1.name, leser1.surname)
-print(leser2.name, leser2.surname)
+print(mentor1.grades)
